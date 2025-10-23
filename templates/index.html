@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>thezachstack Chatbot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #eee;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #chat-box {
+      width: 60%;
+      max-width: 800px;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 10px;
+      height: 400px;
+      overflow-y: auto;
+      background: #1c1c1c;
+      margin-top: 30px;
+    }
+    .user {
+      color: #00d4ff;
+      margin: 5px 0;
+    }
+    .bot {
+      color: #0f0;
+      margin: 5px 0;
+    }
+    #input-area {
+      margin-top: 15px;
+      display: flex;
+      width: 60%;
+      max-width: 800px;
+    }
+    #message {
+      flex: 1;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #444;
+      background: #222;
+      color: #fff;
+    }
+    button {
+      margin-left: 10px;
+      padding: 10px 20px;
+      background: #00d4ff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #0cf;
+    }
+  </style>
+</head>
+<body>
+  <h1>thezachstack Chatbot</h1>
+  <div id="chat-box"></div>
+  <div id="input-area">
+    <input type="text" id="message" placeholder="Type your message..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+    async function sendMessage() {
+      const messageInput = document.getElementById("message");
+      const chatBox = document.getElementById("chat-box");
+      const userMessage = messageInput.value.trim();
+      if (!userMessage) return;
+
+      // Display your message
+      chatBox.innerHTML += `<div class='user'><b>You:</b> ${userMessage}</div>`;
+      messageInput.value = "";
+
+      // Send message to Flask backend
+      const response = await fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userMessage })
+      });
+
+      const data = await response.json();
+
+      // Display chatbot's response
+      chatBox.innerHTML += `<div class='bot'><b>Bot:</b> ${data.response}</div>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  </script>
+</body>
+</html>
+
