@@ -1,4 +1,5 @@
 import os
+from groq import groq
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify, render_template
 from openai import OpenAI
